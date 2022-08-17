@@ -2,7 +2,7 @@ from flask import Flask
 from flask_login import LoginManager
 
 from webapp.admin.views import blueprint as admin_blueprint
-from webapp.model import db
+from webapp.db import db
 from webapp.user.models import User
 from webapp.user.views import blueprint as user_blueprint
 from webapp.news.views import blueprint as news_blueprint
