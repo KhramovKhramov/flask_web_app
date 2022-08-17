@@ -1,11 +1,11 @@
-from flask import Flask, render_template
+from flask import Flask
 from flask_login import LoginManager
 
 from webapp.admin.views import blueprint as admin_blueprint
-from webapp.model import News, db
+from webapp.model import db
 from webapp.user.models import User
 from webapp.user.views import blueprint as user_blueprint
-from webapp.weather import weather_by_city
+from webapp.news.views import blueprint as news_blueprint
 
 
 def create_app():
@@ -18,16 +18,10 @@ def create_app():
     login_manager.login_view = 'user.login'
     app.register_blueprint(user_blueprint)
     app.register_blueprint(admin_blueprint)
+    app.register_blueprint(news_blueprint)
 
     @login_manager.user_loader
     def load_user(user_id):
         return User.query.get(user_id)
-
-    @app.route('/')
-    def index():
-        title = 'Новости Python'
-        weather = weather_by_city(app.config['WEATHER_DEFAULT_CITY'])
-        news_list = News.query.order_by(News.published.desc()).all()
-        return render_template('index.html', page_title=title, weather=weather, news_list=news_list)
 
     return app
